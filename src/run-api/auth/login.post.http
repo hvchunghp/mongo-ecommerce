@@ -1,0 +1,9 @@
+@url_dev=http://localhost:8000/api
+
+POST {{url_dev}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "shopa@gmail.com",
+  "password": "123456"
+}

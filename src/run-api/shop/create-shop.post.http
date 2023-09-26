@@ -1,0 +1,12 @@
+@url_dev=http://localhost:8000/api
+
+POST {{url_dev}}/shop/create-shop
+Content-Type: application/json
+x-api-key:543b3a7a60ed59d84d9264b0bfa79541e3c7ea433e226e803076df6b7393d69799c7f60e0201263a81dcf320b52b9a017d883df5a72a0a78852664e38025d51b
+
+{
+  "name": "Shop Zz",
+  "email": "shopz@gmail.com",
+  "password": "123456",
+  "verify": true
+}

@@ -1,0 +1,21 @@
+
+@url_dev=http://localhost:8000/api
+
+POST {{url_dev}}/product/create-product
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGZkZTVmNjkyMWYwOTE5ZTU4NmQ3ZjgiLCJlbWFpbCI6InNob3BhQGdtYWlsLmNvbSIsImlhdCI6MTY5NTQ5NDUzMSwiZXhwIjoxNjk1NTgwOTMxfQ.CJp5zBUDUbJyAR93Ltszy46kiXCzm335vbZn3WHijzg
+x-client-id:64fde5f6921f0919e586d7f8
+
+{
+  "product_name": "Áo phông cao cấp",
+  "product_thumb": "thumb",
+  "product_description": "đẹp vl",
+  "product_price": 200000,
+  "product_quantity": 50,
+  "product_type": "Clothing",
+  "product_attributes": {
+    "brand": "DirtyCoins",
+    "size": "none",
+    "material": "silk"
+  }
+}
