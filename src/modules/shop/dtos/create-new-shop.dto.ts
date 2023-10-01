@@ -14,14 +14,14 @@ export class CreateShopDto {
     @ApiProperty()
     @IsString()
     @IsNotEmpty()
-    @Transform(({ value }: TransformFnParams) => value.trim())
+    @Transform(({ value }: TransformFnParams) => value?.trim())
     name: string;
 
     @ApiProperty()
     @IsString()
     @IsNotEmpty()
     @IsEmail()
-    @Transform(({ value }: TransformFnParams) => value.trim().toLowerCase())
+    @Transform(({ value }: TransformFnParams) => value?.trim().toLowerCase())
     email: string;
 
     @ApiProperty()
@@ -34,7 +34,7 @@ export class CreateShopDto {
     @IsString()
     @IsOptional()
     @IsEnum(EStatus)
-    @Transform(({ value }: TransformFnParams) => value.trim().toLowerCase())
+    @Transform(({ value }: TransformFnParams) => value?.trim().toLowerCase())
     status: string;
 
     @ApiProperty()

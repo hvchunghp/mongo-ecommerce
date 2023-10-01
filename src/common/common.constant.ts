@@ -9,3 +9,9 @@ export enum ESortBy {
     ASC = 'asc',
     DESC = 'desc',
 }
+
+export const CommonUnSelect = {
+    __v: 0,
+    updatedAt: 0,
+    createdAt: 0,
+};

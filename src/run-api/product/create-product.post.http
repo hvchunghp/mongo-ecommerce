@@ -3,18 +3,18 @@
 
 POST {{url_dev}}/product/create-product
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGZkZTVmNjkyMWYwOTE5ZTU4NmQ3ZjgiLCJlbWFpbCI6InNob3BhQGdtYWlsLmNvbSIsImlhdCI6MTY5NTQ5NDUzMSwiZXhwIjoxNjk1NTgwOTMxfQ.CJp5zBUDUbJyAR93Ltszy46kiXCzm335vbZn3WHijzg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGZkZTVmNjkyMWYwOTE5ZTU4NmQ3ZjgiLCJlbWFpbCI6InNob3BhQGdtYWlsLmNvbSIsImlhdCI6MTY5NTc0NTM5MSwiZXhwIjoxNjk1ODMxNzkxfQ.76vtQBGEEWoyEdzR-Vtc9ndi3WQxwakcE1m0_0FdKRk
 x-client-id:64fde5f6921f0919e586d7f8
 
 {
-  "product_name": "Áo phông cao cấp",
+  "product_name": "Quạt điện cơ thống nhất",
   "product_thumb": "thumb",
-  "product_description": "đẹp vl",
-  "product_price": 200000,
-  "product_quantity": 50,
-  "product_type": "Clothing",
+  "product_description": "mát vl",
+  "product_price": 300000,
+  "product_quantity": 20,
+  "product_type": "electronic",
   "product_attributes": {
-    "brand": "DirtyCoins",
+    "manufacture": "Thống nhất",
     "size": "none",
     "material": "silk"
   }

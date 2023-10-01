@@ -13,7 +13,7 @@ import { ShopService } from '../shop/shop.service';
 import * as bcrypt from 'bcrypt';
 import { CommonReturn } from 'src/common/helpers';
 import { EReturnStatus } from 'src/common/common.constant';
-import { getInfoData } from 'src/common/utils';
+import { pickData } from 'src/common/utils';
 import { TokenService } from '../token/token.service';
 import { Request } from 'express';
 
@@ -44,7 +44,7 @@ export class AuthService {
         return CommonReturn({
             status: EReturnStatus.SUCCESS,
             statusCode: HttpStatus.OK,
-            data: { shop: getInfoData(['_id', 'name', 'email'], shop), tokens },
+            data: { shop: pickData(['_id', 'name', 'email'], shop), tokens },
             message: 'Login success.',
         });
     }

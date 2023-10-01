@@ -6,6 +6,9 @@ import { Product, ProductSchema } from './schemas/product.schema';
 import { Clothing, ClothingSchema } from './schemas/clothing.schema';
 import { Furniture, FurnitureSchema } from './schemas/furniture.schema';
 import { Electronic, ElectronicSchema } from './schemas/electronic.schema';
+import { ClothingService } from './productTypeService/clothing.service';
+import { FurnitureService } from './productTypeService/furniture.service';
+import { ElectronicService } from './productTypeService/electronic.service';
 
 @Module({
     imports: [
@@ -17,6 +20,11 @@ import { Electronic, ElectronicSchema } from './schemas/electronic.schema';
         ]),
     ],
     controllers: [ProductController],
-    providers: [ProductService],
+    providers: [
+        ProductService,
+        ClothingService,
+        FurnitureService,
+        ElectronicService,
+    ],
 })
 export class ProductModule {}

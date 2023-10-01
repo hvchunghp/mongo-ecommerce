@@ -3,6 +3,7 @@ import {
     Controller,
     Get,
     Headers,
+    Patch,
     Post,
     Put,
     Query,
@@ -18,6 +19,7 @@ import { LimitPageDto } from '../../common/dto/limit-page';
 import { GetAllPublishProductDto } from './dtos/get-all-publish-product.dto';
 import { FindProductDto } from './dtos/find-product.dto';
 import { FindAllProductDto } from './dtos/find-all-product.dto';
+import { UpdateProductDto } from './dtos/update-product.dto';
 
 @ApiTags('product')
 @Controller('product')
@@ -29,12 +31,11 @@ export class ProductController {
     @UseGuards(JwtAuthGuard)
     async createNewProduct(
         @Body() createNewProductDto: CreateNewProductDto,
-        @User() { userId }: IUser,
         @Headers('x-client-id') clientId: string,
     ) {
         return await this.productService.handleCreateProduct(
             createNewProductDto,
-            userId,
+            clientId,
         );
     }
 
@@ -44,10 +45,9 @@ export class ProductController {
     async getAllDraftProduct(
         @Headers('x-client-id') clientId: string,
         @Query() limitPageDto: LimitPageDto,
-        @User() { userId }: IUser,
     ) {
         return await this.productService.handleGetAllDraftProductInShop(
-            userId,
+            clientId,
             limitPageDto,
         );
     }
@@ -57,11 +57,10 @@ export class ProductController {
     @UseGuards(JwtAuthGuard)
     async publishProduct(
         @Headers('x-client-id') clientId: string,
-        @User() { userId }: IUser,
         @Body() findProductDto: FindProductDto,
     ) {
         return await this.productService.handlePublishProduct(
-            userId,
+            clientId,
             findProductDto,
         );
     }
@@ -80,11 +79,10 @@ export class ProductController {
     @UseGuards(JwtAuthGuard)
     async unpublishProduct(
         @Headers('x-client-id') clientId: string,
-        @User() { userId }: IUser,
         @Body() findProductDto: FindProductDto,
     ) {
         return await this.productService.handleUnpublishProduct(
-            userId,
+            clientId,
             findProductDto,
         );
     }
@@ -93,6 +91,24 @@ export class ProductController {
     async findAllProduct(@Query() findAllProductDto: FindAllProductDto) {
         return await this.productService.handleFindAllProduct(
             findAllProductDto,
+        );
+    }
+
+    @Get('/find-product-by-id')
+    async findProductById(@Query() findProductDto: FindProductDto) {
+        return await this.productService.findProductById(findProductDto);
+    }
+
+    @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard)
+    @Patch('/update-product')
+    async updateProduct(
+        @Body() updateProductDto: UpdateProductDto,
+        @Headers('x-client-id') clientId: string,
+    ) {
+        return await this.productService.updateProduct(
+            clientId,
+            updateProductDto,
         );
     }
 }

@@ -14,7 +14,7 @@ import { CommonReturn } from 'src/common/helpers';
 import { EReturnStatus } from 'src/common/common.constant';
 import { EShopRole } from './shop.constant';
 import { TokenService } from '../token/token.service';
-import { getInfoData } from 'src/common/utils';
+import { pickData } from 'src/common/utils';
 @Injectable()
 export class ShopService {
     constructor(
@@ -65,7 +65,7 @@ export class ShopService {
         return CommonReturn({
             status: EReturnStatus.SUCCESS,
             statusCode: HttpStatus.CREATED,
-            data: { shop: getInfoData(['_id', 'name', 'email'], shop), tokens },
+            data: { shop: pickData(['_id', 'name', 'email'], shop), tokens },
             message: 'Create shop success.',
         });
     }

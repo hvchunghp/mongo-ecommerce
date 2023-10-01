@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Transform, TransformFnParams } from 'class-transformer';
 import {
     IsEnum,
+    IsMongoId,
     IsNotEmpty,
     IsNumber,
     IsOptional,
@@ -9,7 +10,7 @@ import {
 } from 'class-validator';
 import { EProductType } from '../product.constant';
 
-export class ProductAttributeDto {
+export class UpdateProductAttributeDto {
     @ApiProperty()
     @IsOptional()
     brand: string;
@@ -19,24 +20,36 @@ export class ProductAttributeDto {
     manufacture: string;
 
     @ApiProperty()
-    @IsNotEmpty()
+    @IsOptional()
     size: string;
 
     @ApiProperty()
-    @IsNotEmpty()
+    @IsOptional()
     material: string;
 }
 
-export class CreateNewProductDto {
+export class UpdateProductDto {
+    @ApiProperty()
+    @IsMongoId()
+    @IsNotEmpty()
+    productId: string;
+
     @ApiProperty()
     @IsString()
     @IsNotEmpty()
+    @IsEnum(EProductType)
+    @Transform(({ value }: TransformFnParams) => value?.trim().toLowerCase())
+    product_type: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
     @Transform(({ value }: TransformFnParams) => value?.trim())
     product_name: string;
 
     @ApiProperty()
     @IsString()
-    @IsNotEmpty()
+    @IsOptional()
     @Transform(({ value }: TransformFnParams) => value?.trim())
     product_thumb: string;
 
@@ -48,22 +61,15 @@ export class CreateNewProductDto {
 
     @ApiProperty()
     @IsNumber()
-    @IsNotEmpty()
+    @IsOptional()
     product_price: number;
 
     @ApiProperty()
     @IsNumber()
-    @IsNotEmpty()
+    @IsOptional()
     product_quantity: number;
 
     @ApiProperty()
-    @IsString()
-    @IsNotEmpty()
-    @IsEnum(EProductType)
-    @Transform(({ value }: TransformFnParams) => value?.trim().toLowerCase())
-    product_type: string;
-
-    @ApiProperty()
-    @IsNotEmpty()
-    product_attributes: ProductAttributeDto;
+    @IsOptional()
+    product_attributes: UpdateProductAttributeDto;
 }
