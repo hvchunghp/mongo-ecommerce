@@ -28,5 +28,6 @@ import { InventoryModule } from '../inventory/inventory.module';
         FurnitureService,
         ElectronicService,
     ],
+    exports: [ProductService]
 })
 export class ProductModule {}

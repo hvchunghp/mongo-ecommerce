@@ -1,0 +1,24 @@
+@url_dev=http://localhost:8000/api
+
+POST {{url_dev}}/discount/create-discount
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGZkZTVmNjkyMWYwOTE5ZTU4NmQ3ZjgiLCJlbWFpbCI6InNob3BhQGdtYWlsLmNvbSIsImlhdCI6MTY5NjE1OTQyMSwiZXhwIjoxNjk2MjQ1ODIxfQ.BHZFrw1n3XFOIlhBy6daMmxjQNCpcOcVyPLReOf5THM
+x-client-id:64fde5f6921f0919e586d7f8
+
+{
+  "discount_name": "sale sap san",
+  "discount_description": "ko co gi",
+  "discount_type": "percentage",
+  "discount_value": 10000,
+  "discount_code": "magiamgia1",
+  "discount_start_date": "2023-11-11",
+  "discount_max_use": 100,
+  "discount_max_use_per_user": 10,
+  "discount_min_price": 50000,
+  "discount_shopId": "64fde5f6921f0919e586d7f8",
+  "discount_active": true,
+  "discount_apply_to": "specific",
+  "discount_list_product": [
+    "650feb2312290f0c785e1881", "650feb3312290f0c785e1886", "650feb3e12290f0c785e188b", "65130ad65d945b47bd4d27a7"
+  ]
+}

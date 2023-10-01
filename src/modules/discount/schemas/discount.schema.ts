@@ -2,10 +2,10 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 import { EApplyDiscountFor, EDiscountType } from '../discount.constant';
 
-export type InventoryDocument = HydratedDocument<Inventory>;
+export type DiscountDocument = HydratedDocument<Discount>;
 
 @Schema({ timestamps: true })
-export class Inventory {
+export class Discount {
     @Prop({
         required: true,
         trim: true,
@@ -39,13 +39,22 @@ export class Inventory {
     discount_code: string;
 
     @Prop({
-        required: true,
         default: new Date(),
     })
     discount_start_date: Date;
 
     @Prop({
-        required: true,
+        default: function () {
+            const futureDate = new Date(this.discount_start_date);
+            futureDate.setDate(futureDate.getDate() + 7);
+            return futureDate;
+        },
+        validate: {
+            validator: function (value) {
+                return value > this.discount_start_date;
+            },
+            message: 'end_date must be greater than start_date',
+        },
     })
     discount_end_date: Date;
 
@@ -54,13 +63,10 @@ export class Inventory {
     })
     discount_max_use: number;
 
-    @Prop({
-        required: true,
-    })
+    @Prop()
     discount_used_count: number;
 
     @Prop({
-        required: true,
         default: () => [],
     })
     discount_list_used: mongoose.Schema.Types.ObjectId[];
@@ -105,4 +111,4 @@ export class Inventory {
     updatedAt?: Date;
 }
 
-export const InventorySchema = SchemaFactory.createForClass(Inventory);
+export const DiscountSchema = SchemaFactory.createForClass(Discount);

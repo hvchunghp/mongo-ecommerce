@@ -470,4 +470,12 @@ export class ProductService {
             message: 'Update product success.',
         });
     }
+
+    async getListProduct(shopId: string, listProduct: string[]) {
+        const product = await this.productModel.find({
+            product_shop: shopId,
+            _id: { $in: listProduct },
+        });
+        return product;
+    }
 }
