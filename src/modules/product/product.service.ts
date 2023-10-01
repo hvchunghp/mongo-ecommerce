@@ -26,6 +26,7 @@ import { ClothingService } from './productTypeService/clothing.service';
 import { ElectronicService } from './productTypeService/electronic.service';
 import { FurnitureService } from './productTypeService/furniture.service';
 import { pickData } from 'src/common/utils';
+import { InventoryService } from '../inventory/inventory.service';
 
 @Injectable()
 export class ProductService {
@@ -36,6 +37,7 @@ export class ProductService {
         private readonly clothingService: ClothingService,
         private readonly electronicService: ElectronicService,
         private readonly furnitureService: FurnitureService,
+        private readonly inventoryService: InventoryService,
     ) {
         this.registerType(EProductType.CLOTHING, this.clothingService);
         this.registerType(EProductType.ELECTRONIC, this.electronicService);
@@ -106,55 +108,77 @@ export class ProductService {
         if (!product) {
             throw new BadRequestException('Create product failed.');
         }
+        const inventory = await this.inventoryService.createInventory({
+            productId: product._id.toString(),
+            shopId: product.product_shop.toString(),
+            stock: product.product_quantity,
+        });
         return CommonReturn({
             status: EReturnStatus.SUCCESS,
             statusCode: HttpStatus.CREATED,
-            data: { product },
+            data: { product, inventory },
             message: 'Create product success.',
         });
     }
 
-    private async GetProduct(
-        shopId: string,
-        query: any,
-        limit?: number,
-        page?: number,
-        keyword?: string,
-    ) {
-        const offset = page * limit - limit;
+    private async GetProduct({
+        query,
+        limit,
+        page,
+        keyword,
+        sort,
+    }: {
+        query?: any;
+        limit?: number;
+        page?: number;
+        keyword?: string;
+        sort?: any;
+    }) {
+        const offset = (page - 1) * limit;
 
-        const matchStage: any = {
-            ...query,
-            product_shop: new mongoose.Types.ObjectId(shopId),
-        };
+        const matchStage = query;
 
         if (keyword) {
-            matchStage.$text = { $search: keyword };
+            matchStage.$or = [
+                {
+                    product_name: { $regex: keyword },
+                },
+                {
+                    product_description: { $regex: keyword },
+                },
+            ];
         }
 
-        const totalDocs = await this.productModel.aggregate([
+        const [{ product, totalDocs }] = await this.productModel.aggregate([
             {
-                $match: matchStage,
-            },
-            {
-                $count: 'totalCount',
-            },
-        ]);
-
-        const product = await this.productModel.aggregate([
-            {
-                $match: matchStage,
-            },
-            {
-                $sort: {
-                    createdAt: -1,
+                $facet: {
+                    product: [
+                        {
+                            $match: matchStage,
+                        },
+                        {
+                            $sort: sort || {
+                                createdAt: -1,
+                            },
+                        },
+                        {
+                            $skip: offset || 0,
+                        },
+                        {
+                            $limit: limit ? limit : 10,
+                        },
+                    ],
+                    totalDocs: [
+                        {
+                            $match: {
+                                ...matchStage,
+                            },
+                        },
+                        {
+                            $count: 'totalCount',
+                        },
+                    ],
                 },
-            },
-            {
-                $skip: offset || 0,
-            },
-            {
-                $limit: limit ? limit : 10,
             },
         ]);
 
@@ -171,12 +195,15 @@ export class ProductService {
         limitPageDto: LimitPageDto,
     ) {
         const { limit, page } = limitPageDto;
-        const { product, pageDetail } = await this.GetProduct(
-            shopId,
-            { isDraft: true, isPublish: false },
+        const { product, pageDetail } = await this.GetProduct({
+            query: {
+                isDraft: true,
+                isPublish: false,
+                product_shop: new mongoose.Types.ObjectId(shopId),
+            },
             limit,
             page,
-        );
+        });
 
         return CommonReturn({
             status: EReturnStatus.SUCCESS,
@@ -224,13 +251,16 @@ export class ProductService {
         getAllPublishProductDto: GetAllPublishProductDto,
     ) {
         const { shopId, limit, page, keyword } = getAllPublishProductDto;
-        const { product, pageDetail } = await this.GetProduct(
-            shopId,
-            { isDraft: false, isPublish: true },
+        const { product, pageDetail } = await this.GetProduct({
+            query: {
+                isDraft: false,
+                isPublish: true,
+                product_shop: new mongoose.Types.ObjectId(shopId),
+            },
             limit,
             page,
             keyword,
-        );
+        });
 
         return CommonReturn({
             status: EReturnStatus.SUCCESS,
@@ -279,71 +309,25 @@ export class ProductService {
 
     async handleFindAllProduct(findAllProductDto: FindAllProductDto) {
         const { keyword, limit, page, sortBy } = findAllProductDto;
-        const offset = (page - 1) * limit;
 
-        const matchStage: Record<string, any> = {
-            isDraft: false,
-            isPublish: true,
-        };
-
-        let sort: any = {
+        const sort = {
             createdAt: -1,
         };
 
-        if (keyword) {
-            matchStage.$text = { $search: keyword };
-        }
         if (sortBy) {
-            sort = {
-                createdAt: sortBy,
-            };
+            sort.createdAt = sortBy;
         }
 
-        const product = await this.productModel.aggregate([
-            {
-                $match: matchStage,
+        const { product, pageDetail } = await this.GetProduct({
+            query: {
+                isDraft: false,
+                isPublish: true,
             },
-            {
-                $project: CommonUnSelect,
-            },
-            {
-                $lookup: {
-                    from: 'shops',
-                    localField: 'product_shop',
-                    foreignField: '_id',
-                    as: 'ownedBy',
-                    pipeline: [
-                        {
-                            $project: {
-                                _id: 1,
-                                name: 1,
-                                email: 1,
-                            },
-                        },
-                    ],
-                },
-            },
-            {
-                $sort: sort,
-            },
-            {
-                $skip: offset || 0,
-            },
-            {
-                $limit: limit || 10,
-            },
-        ]);
-
-        const totalDocs = await this.productModel.aggregate([
-            {
-                $match: matchStage,
-            },
-            {
-                $count: 'totalCount',
-            },
-        ]);
-
-        const pageDetail = paginating(totalDocs, page || 1, limit || 10);
+            limit,
+            page,
+            keyword,
+            sort,
+        });
 
         return CommonReturn({
             status: EReturnStatus.SUCCESS,

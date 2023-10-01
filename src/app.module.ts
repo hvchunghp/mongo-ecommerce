@@ -7,6 +7,8 @@ import { ShopModule } from './modules/shop/shop.module';
 import { TokenModule } from './modules/token/token.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ProductModule } from './modules/product/product.module';
+import { InventoryModule } from './modules/inventory/inventory.module';
+import { DiscountModule } from './modules/discount/discount.module';
 
 @Module({
     imports: [
@@ -21,6 +23,8 @@ import { ProductModule } from './modules/product/product.module';
         TokenModule,
         AuthModule,
         ProductModule,
+        InventoryModule,
+        DiscountModule,
     ],
     controllers: [AppController],
     providers: [AppService],

@@ -9,6 +9,7 @@ import { Electronic, ElectronicSchema } from './schemas/electronic.schema';
 import { ClothingService } from './productTypeService/clothing.service';
 import { FurnitureService } from './productTypeService/furniture.service';
 import { ElectronicService } from './productTypeService/electronic.service';
+import { InventoryModule } from '../inventory/inventory.module';
 
 @Module({
     imports: [
@@ -18,6 +19,7 @@ import { ElectronicService } from './productTypeService/electronic.service';
             { name: Furniture.name, schema: FurnitureSchema },
             { name: Electronic.name, schema: ElectronicSchema },
         ]),
+        InventoryModule,
     ],
     controllers: [ProductController],
     providers: [
